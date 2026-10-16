@@ -22,75 +22,66 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      {/* Hero Section */}
-      <section className="hero-section" style={{
-        padding: '4.5rem 0 3.5rem',
-        background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%)',
-        borderBottom: '1px solid var(--color-border)'
-      }}>
-        <div className="container" style={{
-          display: 'grid',
-          gridTemplateColumns: '1.15fr 0.85fr',
-          gap: '3rem',
-          alignItems: 'center'
-        }}>
-          {/* Left Text */}
-          <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.35rem 0.85rem', background: 'var(--color-primary-light)', border: '1px solid var(--color-primary-border)', borderRadius: 'var(--radius-full)', color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 600, marginBottom: '1.25rem' }}>
+      {/* Hero Section with Full Background Video & Centered Layout */}
+      <section className="home-hero-section">
+        {/* Full-bleed Background Video */}
+        <div className="home-hero-video-bg">
+          <video
+            className="home-hero-video"
+            src="/bgvideo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        </div>
+
+        {/* Readability Contrast Overlay */}
+        <div className="home-hero-overlay" />
+
+        {/* Centered Foreground Content */}
+        <div className="container home-hero-container">
+          <div className="home-hero-content">
+            <div className="home-hero-badge">
               <Sparkles size={14} />
               <span>Next-Gen MOOC Practice Platform</span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', lineHeight: 1.15, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
-              Master Your MOOC Courses with <span style={{ color: 'var(--color-primary)' }}>Precision Quizzing</span>
+            <h1 className="home-hero-title">
+              Master Your MOOC Courses with <span className="home-hero-title-accent">Precision Quizzing</span>
             </h1>
 
-            <p style={{ fontSize: '1.1rem', color: 'var(--color-text-muted)', lineHeight: 1.6, marginBottom: '2rem', maxWidth: '580px' }}>
+            <p className="home-hero-description">
               Designed for learners tackling rigorous online courses. Practice weekly topic quizzes, test yourself in simulated Exam Mode, and challenge full-syllabus mock assessments with zero friction.
             </p>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div className="home-hero-actions">
               <Link to="/subjects" className="btn btn-primary btn-lg">
                 <span>Explore All Subjects</span>
                 <ArrowRight size={18} />
               </Link>
-              <Link to="/demo-quiz" className="btn btn-secondary btn-lg">
+              <Link to="/demo-quiz" className="btn btn-secondary btn-lg home-hero-btn-demo">
                 <Sparkles size={18} color="var(--color-primary)" />
                 <span>Try Quiz Engine Demo</span>
               </Link>
             </div>
 
             {/* Quick Metrics */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border)', flexWrap: 'wrap' }}>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--color-text-main)' }}>13 Weeks</div>
-                <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Wildlife Ecology</div>
+            <div className="home-hero-metrics">
+              <div className="home-hero-metric-item">
+                <div className="home-hero-metric-val">Multiple</div>
+                <div className="home-hero-metric-lbl">Subjects</div>
               </div>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--color-primary)' }}>130 MCQs</div>
-                <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Planned Bank</div>
+              <div className="home-hero-metric-divider" />
+              <div className="home-hero-metric-item">
+                <div className="home-hero-metric-val primary">130 MCQs</div>
+                <div className="home-hero-metric-lbl">Question Bank</div>
               </div>
-              <div>
-                <div style={{ fontSize: '1.35rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--color-navy-dark)' }}>2 Modes</div>
-                <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>Study & Exam</div>
+              <div className="home-hero-metric-divider" />
+              <div className="home-hero-metric-item">
+                <div className="home-hero-metric-val navy">2 Modes</div>
+                <div className="home-hero-metric-lbl">Study & Exam</div>
               </div>
-            </div>
-          </div>
-
-          {/* Right Hero Visual */}
-          <div style={{ position: 'relative' }}>
-            <div style={{
-              borderRadius: 'var(--radius-xl)',
-              overflow: 'hidden',
-              boxShadow: 'var(--shadow-xl)',
-              border: '1px solid var(--color-border)',
-              background: 'var(--color-bg-card)'
-            }}>
-              <img
-                src="/images/hero.jpg"
-                alt="MOOC Practice Interactive Learning Interface"
-                style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
-              />
             </div>
           </div>
         </div>
@@ -149,8 +140,8 @@ export default function Home() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
-                <Link to="/about#architecture" className="btn btn-outline-primary" style={{ width: '100%' }}>
-                  <span>Learn How Courses are Added</span>
+                <Link to="/about" className="btn btn-outline-primary" style={{ width: '100%' }}>
+                  <span>Learn About MOOC Practice</span>
                   <ArrowRight size={15} />
                 </Link>
               </div>

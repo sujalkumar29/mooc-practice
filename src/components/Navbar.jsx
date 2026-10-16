@@ -58,14 +58,6 @@ export default function Navbar() {
             </li>
             <li>
               <NavLink 
-                to="/subjects/wildlife-ecology" 
-                className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
-              >
-                Wildlife Ecology
-              </NavLink>
-            </li>
-            <li>
-              <NavLink 
                 to="/about" 
                 className={({ isActive }) => `nav-item-link ${isActive ? 'active' : ''}`}
               >

@@ -40,11 +40,13 @@ const testFiles = [
   'test_final_question_and_wraparound.js',
   'test_weekly_quiz_no_breadcrumbs.js',
   'test_wildlife_hero_layout.js',
-  'test_combined_quiz_15min_timer.js'
+  'test_combined_quiz_15min_timer.js',
+  'test_question_shuffling.js',
+  'test_home_hero_video.js'
 ];
 
 console.log('====================================================');
-console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (20 Suites)');
+console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (22 Suites)');
 console.log('====================================================\n');
 
 let failedSuites = 0;

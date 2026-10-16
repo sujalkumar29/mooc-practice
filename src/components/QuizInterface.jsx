@@ -30,6 +30,7 @@ import {
   saveQuizAttemptResult,
   getUserPreferences
 } from '../utils/storage';
+import { shuffleQuestions } from '../utils/questionShuffle';
 
 export default function QuizInterface({
   course,
@@ -50,9 +51,37 @@ export default function QuizInterface({
   const [flaggedQuestions, setFlaggedQuestions] = useState({});
   const [checkedQuestions, setCheckedQuestions] = useState({}); // For Study Mode
 
+  // Active question order: freshly randomized on every quiz page mount or reload
+  // Stable throughout the active session during navigation, option selection, and re-renders
+  const [activeQuestions, setActiveQuestions] = useState(() => {
+    if (!Array.isArray(questions) || questions.length === 0) return [];
+    return shuffleQuestions(questions);
+  });
+
+  const lastQuizKeyRef = useRef(quizKey);
+  const lastCourseIdRef = useRef(course?.id);
+  const lastQuestionsLenRef = useRef(questions.length);
+
+  useEffect(() => {
+    const isDifferentQuiz = lastQuizKeyRef.current !== quizKey || lastCourseIdRef.current !== course?.id;
+    const lengthChanged = lastQuestionsLenRef.current !== questions.length;
+    lastQuizKeyRef.current = quizKey;
+    lastCourseIdRef.current = course?.id;
+    lastQuestionsLenRef.current = questions.length;
+
+    if (!Array.isArray(questions) || questions.length === 0) {
+      setActiveQuestions([]);
+      return;
+    }
+
+    if (isDifferentQuiz || lengthChanged || activeQuestions.length !== questions.length) {
+      setActiveQuestions(shuffleQuestions(questions));
+    }
+  }, [course?.id, quizKey, questions, activeQuestions.length]);
+
   // Visited Questions Tracking for standard instruction-screen status
   const [visitedQuestions, setVisitedQuestions] = useState(() => {
-    const firstQ = questions[0]?.id;
+    const firstQ = (activeQuestions && activeQuestions[0]?.id) || questions[0]?.id;
     return firstQ ? { [firstQ]: true } : {};
   });
 
@@ -89,7 +118,8 @@ export default function QuizInterface({
 
   // Track visited questions whenever active question changes
   useEffect(() => {
-    const activeQ = questions[currentIndex];
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
+    const activeQ = displayList[currentIndex];
     if (activeQ?.id) {
       setVisitedQuestions(prev => {
         if (prev[activeQ.id]) return prev;
@@ -99,7 +129,7 @@ export default function QuizInterface({
         };
       });
     }
-  }, [currentIndex, questions]);
+  }, [currentIndex, activeQuestions, questions]);
 
   // Navigation Protection:
   // Intercept attempts to leave only if in Exam Mode, with >=1 answer selected (or timer running), and attempt is active (unsubmitted)
@@ -137,7 +167,8 @@ export default function QuizInterface({
           setVisitedQuestions(saved.visitedQuestions);
         } else {
           // If previously saved attempt had answers, mark those and first as visited
-          const initialVisited = { [questions[0]?.id]: true };
+          const firstId = activeQuestions[0]?.id || questions[0]?.id;
+          const initialVisited = { [firstId]: true };
           if (saved.userAnswers) {
             Object.keys(saved.userAnswers).forEach(qid => {
               initialVisited[qid] = true;
@@ -178,7 +209,8 @@ export default function QuizInterface({
 
   // Save progress on answer change or question navigation
   useEffect(() => {
-    if (course && quizKey && !evaluationResult && questions.length > 0) {
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
+    if (course && quizKey && !evaluationResult && displayList.length > 0) {
       saveQuizProgress(course.id, quizKey, {
         userAnswers,
         flaggedQuestions,
@@ -190,7 +222,7 @@ export default function QuizInterface({
         examDeadline
       });
     }
-  }, [userAnswers, flaggedQuestions, checkedQuestions, visitedQuestions, currentIndex, mode, examStartTime, examDeadline, course, quizKey, evaluationResult, questions.length]);
+  }, [userAnswers, flaggedQuestions, checkedQuestions, visitedQuestions, currentIndex, mode, examStartTime, examDeadline, course, quizKey, evaluationResult, activeQuestions, questions.length]);
 
   // Authoritative Countdown Timer Interval
   // Critical: Never pauses while the exit confirmation modal is open!
@@ -230,9 +262,10 @@ export default function QuizInterface({
     }
     setIsSubmitModalOpen(false);
 
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     const timeSpent = examStartTime ? Math.round((Date.now() - examStartTime) / 1000) : totalExamDurationSeconds;
     const result = evaluateQuizSubmission({
-      questions,
+      questions: displayList,
       userAnswers,
       timeElapsedSeconds: Math.min(totalExamDurationSeconds, Math.max(1, timeSpent))
     });
@@ -248,7 +281,7 @@ export default function QuizInterface({
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     if (document.documentElement) document.documentElement.scrollTop = 0;
     if (document.body) document.body.scrollTop = 0;
-  }, [blocker, course, quizKey, questions, userAnswers, examStartTime, totalExamDurationSeconds, evaluationResult]);
+  }, [blocker, course, quizKey, activeQuestions, questions, userAnswers, examStartTime, totalExamDurationSeconds, evaluationResult]);
 
   // User-Confirmed Submission
   const handleConfirmSubmit = () => {
@@ -256,9 +289,10 @@ export default function QuizInterface({
     isSubmittingRef.current = true;
     setIsSubmitModalOpen(false);
 
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     const timeSpent = examStartTime ? Math.round((Date.now() - examStartTime) / 1000) : 0;
     const result = evaluateQuizSubmission({
-      questions,
+      questions: displayList,
       userAnswers,
       timeElapsedSeconds: Math.min(totalExamDurationSeconds, Math.max(1, timeSpent))
     });
@@ -278,6 +312,9 @@ export default function QuizInterface({
 
   // Handle Exit Quiz Navigation: Pops back to original course history entry when available
   const handleExitQuizNav = () => {
+    if (course && quizKey) {
+      clearQuizProgress(course.id, quizKey);
+    }
     const hasHistoryEntry = typeof window !== 'undefined' &&
       window.history?.state &&
       typeof window.history.state.idx === 'number' &&
@@ -299,6 +336,7 @@ export default function QuizInterface({
 
   // Action 1: Mark for Review & Next
   const handleMarkForReviewAndNext = () => {
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     // 1. Mark current question for review
     setFlaggedQuestions(prev => {
       const nextFlagged = {
@@ -327,6 +365,7 @@ export default function QuizInterface({
 
   // Action 2: Clear Response
   const handleClearResponse = () => {
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     setUserAnswers(prev => {
       if (!prev[currentQuestion.id]) return prev;
       const nextAnswers = { ...prev };
@@ -358,17 +397,19 @@ export default function QuizInterface({
 
   // Action 3: Save & Next (wraps around to Question 1 if on final question)
   const handleSaveAndNext = () => {
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     const nextIndex = currentIndex < questions.length - 1 ? currentIndex + 1 : 0;
     setCurrentIndex(nextIndex);
 
     if (course && quizKey) {
+      const nextQ = displayList[nextIndex] || questions[nextIndex];
       saveQuizProgress(course.id, quizKey, {
         userAnswers,
         flaggedQuestions,
         checkedQuestions,
         visitedQuestions: {
           ...visitedQuestions,
-          [questions[nextIndex]?.id]: true
+          [nextQ?.id]: true
         },
         currentIndex: nextIndex,
         mode,
@@ -399,6 +440,7 @@ export default function QuizInterface({
 
   // Option Selection: STARTS TIMER ON FIRST ANSWER IN EXAM MODE
   const handleSelectOption = (optionId) => {
+    const displayList = activeQuestions.length > 0 ? activeQuestions : questions;
     let currentStartTime = examStartTimeRef.current || examStartTime;
     let currentDeadline = examDeadlineRef.current || examDeadline;
 
@@ -464,10 +506,16 @@ export default function QuizInterface({
   const handleRetake = () => {
     if (course && quizKey) clearQuizProgress(course.id, quizKey);
     isSubmittingRef.current = false;
+
+    // Generate fresh random permutation avoiding the previous attempt's order
+    const previousOrderIds = (activeQuestions.length > 0 ? activeQuestions : questions).map(q => q.id);
+    const freshlyShuffled = shuffleQuestions(questions, previousOrderIds);
+    setActiveQuestions(freshlyShuffled);
+
     setUserAnswers({});
     setFlaggedQuestions({});
     setCheckedQuestions({});
-    const firstQ = questions[0]?.id;
+    const firstQ = freshlyShuffled[0]?.id || questions[0]?.id;
     setVisitedQuestions(firstQ ? { [firstQ]: true } : {});
     setCurrentIndex(0);
     setExamStartTime(null);
@@ -555,7 +603,8 @@ export default function QuizInterface({
     );
   }
 
-  const currentQuestion = questions[currentIndex] || questions[0];
+  const displayQuestions = activeQuestions.length > 0 ? activeQuestions : questions;
+  const currentQuestion = displayQuestions[currentIndex] || displayQuestions[0] || questions[0];
   const isCurrentFlagged = !!flaggedQuestions[currentQuestion.id];
   const currentAnswer = userAnswers[currentQuestion.id];
   const isCheckedInStudyMode = !!checkedQuestions[currentQuestion.id];
@@ -678,7 +727,7 @@ export default function QuizInterface({
           <div className="question-header">
             <div className="question-meta-tags">
               <span className="question-number-badge">
-                Question {currentIndex + 1} of {questions.length}
+                Question {currentIndex + 1} of {displayQuestions.length}
               </span>
               {currentQuestion.week !== undefined && (
                 <span className="badge badge-navy">Week {currentQuestion.week}</span>
@@ -835,7 +884,7 @@ export default function QuizInterface({
 
         {/* Right Column: Question Navigator Palette with Submit Action */}
         <QuestionNavigator
-          questions={questions}
+          questions={displayQuestions}
           currentIndex={currentIndex}
           userAnswers={userAnswers}
           flaggedQuestions={flaggedQuestions}
@@ -850,7 +899,7 @@ export default function QuizInterface({
       {/* Confirmation Modal Before Voluntary Submission */}
       <SubmitModal
         isOpen={isSubmitModalOpen}
-        totalQuestions={questions.length}
+        totalQuestions={displayQuestions.length}
         answeredCount={answeredCount}
         onConfirm={handleConfirmSubmit}
         onCancel={() => setIsSubmitModalOpen(false)}

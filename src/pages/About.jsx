@@ -6,7 +6,6 @@ import {
   Clock,
   Layers,
   ShieldCheck,
-  Code2,
   HelpCircle,
   Sparkles,
   ArrowRight
@@ -99,35 +98,6 @@ export default function About() {
             </div>
           </div>
 
-          {/* Architecture: How to add new courses */}
-          <div id="architecture" style={{
-            background: 'var(--color-bg-card)',
-            border: '1px solid var(--color-border)',
-            borderRadius: 'var(--radius-xl)',
-            padding: '2.25rem',
-            marginBottom: '2.5rem',
-            boxShadow: 'var(--shadow-sm)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Code2 size={22} color="var(--color-primary)" />
-              Extensible Multi-Subject Architecture
-            </h2>
-            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.975rem', lineHeight: 1.7, marginBottom: '1.25rem' }}>
-              Adding a new subject like <strong>DBMS, Operating Systems, or Computer Networks</strong> requires just three steps with zero modifications to the UI:
-            </p>
-
-            <ol style={{ paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.925rem', color: 'var(--color-text-main)', lineHeight: 1.6 }}>
-              <li>
-                <strong>Create course folder:</strong> Under <code>src/data/&lt;subjectSlug&gt;/</code>, create <code>course.js</code> (weeks metadata, total weeks, planned count) and <code>questions.js</code> (question bank per week).
-              </li>
-              <li>
-                <strong>Register in course catalog:</strong> Import the new course configuration into <code>src/data/courses.js</code> and add it to <code>COURSES_REGISTRY</code>.
-              </li>
-              <li>
-                <strong>Done:</strong> The catalog, cards, 13-week syllabus routes, combined quiz aggregation, question navigator, and results automatically support the new subject.
-              </li>
-            </ol>
-          </div>
 
           {/* Question Policy */}
           <div style={{
@@ -154,8 +124,8 @@ export default function About() {
 
           {/* CTA */}
           <div style={{ textAlign: 'center' }}>
-            <Link to="/subjects/wildlife-ecology" className="btn btn-primary btn-lg">
-              <span>Go to Wildlife Ecology Dashboard</span>
+            <Link to="/subjects" className="btn btn-primary btn-lg">
+              <span>Go to Dashboard</span>
               <ArrowRight size={18} />
             </Link>
           </div>
