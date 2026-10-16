@@ -77,6 +77,20 @@ export default function QuizInterface({
     if (isDifferentQuiz || lengthChanged || activeQuestions.length !== questions.length) {
       setActiveQuestions(shuffleQuestions(questions));
     }
+
+    if (isDifferentQuiz) {
+      setUserAnswers({});
+      setFlaggedQuestions({});
+      setCheckedQuestions({});
+      setCurrentIndex(0);
+      setExamStartTime(null);
+      setExamDeadline(null);
+      examStartTimeRef.current = null;
+      examDeadlineRef.current = null;
+      setEvaluationResult(null);
+      setShowReview(false);
+      isSubmittingRef.current = false;
+    }
   }, [course?.id, quizKey, questions, activeQuestions.length]);
 
   // Visited Questions Tracking for standard instruction-screen status
@@ -589,6 +603,7 @@ export default function QuizInterface({
       <div className="quiz-evaluation-view">
         <ResultsSummary
           course={course}
+          quizKey={quizKey}
           quizTitle={quizTitle}
           evaluation={evaluationResult}
           onRetake={handleRetake}

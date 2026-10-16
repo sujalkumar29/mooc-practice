@@ -54,6 +54,7 @@ export default function WeeklyQuiz() {
     <div className="weekly-quiz-page">
       <div className="container quiz-page-container">
         <QuizInterface
+          key={`week-${weekNum}`}
           course={course}
           quizKey={`week-${weekNum}`}
           quizTitle={`${course.title} — Week ${weekNum}`}
