@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOOC Practice — Multi-Subject Educational Quiz Platform</title>
+    <meta name="description" content="Prepare and excel in your MOOC courses with structured weekly quizzes, combined mock tests, instant feedback in Study Mode, and timed assessments in Exam Mode." />
+    <!-- Modern Typography: Inter and Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Immediate Scroll Reset & Manual Restoration for Page Reloads -->
+    <script>
+      try {
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+        var isReload = false;
+        if (typeof performance !== 'undefined') {
+          if (performance.getEntriesByType) {
+            var navEntries = performance.getEntriesByType('navigation');
+            if (navEntries && navEntries.length > 0) {
+              isReload = navEntries[0].type === 'reload';
+            }
+          }
+          if (!isReload && performance.navigation) {
+            isReload = performance.navigation.type === 1;
+          }
+        }
+        if (isReload || !location.hash) {
+          window.scrollTo(0, 0);
+          if (document.documentElement) document.documentElement.scrollTop = 0;
+          if (document.body) document.body.scrollTop = 0;
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
