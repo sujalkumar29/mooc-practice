@@ -42,11 +42,12 @@ const testFiles = [
   'test_wildlife_hero_layout.js',
   'test_combined_quiz_15min_timer.js',
   'test_question_shuffling.js',
-  'test_home_hero_video.js'
+  'test_home_hero_video.js',
+  'test_vercel_routing_and_fallback.js'
 ];
 
 console.log('====================================================');
-console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (22 Suites)');
+console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (23 Suites)');
 console.log('====================================================\n');
 
 let failedSuites = 0;

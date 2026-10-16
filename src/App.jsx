@@ -12,6 +12,7 @@ import WeeklyQuiz from './pages/WeeklyQuiz';
 import CombinedQuiz from './pages/CombinedQuiz';
 import QuizSandbox from './pages/QuizSandbox';
 import About from './pages/About';
+import NotFound from './pages/NotFound';
 
 // Styles
 import './styles/index.css';
@@ -20,8 +21,11 @@ import './styles/quiz.css';
 
 function RootLayout() {
   const location = useLocation();
-  // Exclude global footer from all active quiz routes (Week 0-12, combined, sandbox)
-  const isQuizRoute = /\/quiz(\/|$)/.test(location.pathname) || location.pathname === '/demo-quiz';
+  // Exclude global footer from all active quiz routes (Week 0-12, combined, sandbox, and aliases)
+  const isQuizRoute =
+    /\/quiz(\/|$)/.test(location.pathname) ||
+    /\/(combined|week(-\d+|\/\d+))$/.test(location.pathname) ||
+    location.pathname === '/demo-quiz';
 
   return (
     <>
@@ -50,9 +54,13 @@ const router = createBrowserRouter([
       { path: 'subjects/:subjectSlug/quiz/combined', element: <CombinedQuiz /> },
       { path: 'subjects/:subjectSlug/quiz/:weekParam', element: <WeeklyQuiz /> },
       { path: 'subjects/:subjectSlug/quiz/week/:weekNumber', element: <WeeklyQuiz /> },
+      // Route aliases for direct access and backwards-compatibility
+      { path: 'subjects/:subjectSlug/combined', element: <CombinedQuiz /> },
+      { path: 'subjects/:subjectSlug/week/:weekNumber', element: <WeeklyQuiz /> },
+      { path: 'subjects/:subjectSlug/week-:weekNumber', element: <WeeklyQuiz /> },
       { path: 'demo-quiz', element: <QuizSandbox /> },
       { path: 'about', element: <About /> },
-      { path: '*', element: <Navigate to="/" replace /> }
+      { path: '*', element: <NotFound /> }
     ]
   }
 ]);
