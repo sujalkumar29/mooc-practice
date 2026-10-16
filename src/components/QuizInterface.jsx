@@ -57,14 +57,24 @@ export default function QuizInterface({
   });
 
   // Authoritative Exam Mode Countdown Timer
-  // Combined Quiz is 15 minutes (900s); weekly quizzes are 90s/question (default 15 min for 10 MCQs)
+  // Full Syllabus Combined Quiz is strictly 15 minutes (900s); weekly quizzes are 90s/question (default 15 min for 10 MCQs)
+  const isCombinedQuiz = quizKey === 'combined' || quizKey?.startsWith('combined');
   const totalExamDurationSeconds = durationSeconds !== undefined
-    ? durationSeconds
+    ? (isCombinedQuiz ? 900 : durationSeconds)
     : (quizKey === 'combined' ? 900 : Math.max(600, questions.length * 90));
 
   const [examStartTime, setExamStartTime] = useState(null); // Timestamp in ms
   const [examDeadline, setExamDeadline] = useState(null);   // Timestamp in ms
   const [remainingSeconds, setRemainingSeconds] = useState(totalExamDurationSeconds);
+
+  // Synchronous refs to prevent duplicate timer start on rapid clicks or re-renders
+  const examStartTimeRef = useRef(null);
+  const examDeadlineRef = useRef(null);
+
+  useEffect(() => {
+    examStartTimeRef.current = examStartTime;
+    examDeadlineRef.current = examDeadline;
+  }, [examStartTime, examDeadline]);
 
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [evaluationResult, setEvaluationResult] = useState(null);
@@ -92,8 +102,8 @@ export default function QuizInterface({
   }, [currentIndex, questions]);
 
   // Navigation Protection:
-  // Intercept attempts to leave only if in Exam Mode, with >=1 answer selected, and attempt is active (unsubmitted)
-  const isProtectedExam = mode === 'exam' && answeredCount > 0 && !evaluationResult && !isSubmittingRef.current;
+  // Intercept attempts to leave only if in Exam Mode, with >=1 answer selected (or timer running), and attempt is active (unsubmitted)
+  const isProtectedExam = mode === 'exam' && (answeredCount > 0 || !!examDeadline) && !evaluationResult && !isSubmittingRef.current;
 
   const blocker = useBlocker(
     useCallback(
@@ -143,9 +153,16 @@ export default function QuizInterface({
         // Resume authoritative timer state if already started
         if (saved.examDeadline) {
           const now = Date.now();
-          const rem = Math.max(0, Math.ceil((saved.examDeadline - now) / 1000));
+          // Guarantee that any stale in-progress sessions for Combined Quiz with >15m durations are clamped to 15m
+          let authoritativeDeadline = saved.examDeadline;
+          if (isCombinedQuiz && saved.examStartTime && (saved.examDeadline - saved.examStartTime > 900 * 1000 + 2000)) {
+            authoritativeDeadline = saved.examStartTime + 900 * 1000;
+          }
+          const rem = Math.max(0, Math.ceil((authoritativeDeadline - now) / 1000));
           setExamStartTime(saved.examStartTime);
-          setExamDeadline(saved.examDeadline);
+          setExamDeadline(authoritativeDeadline);
+          examStartTimeRef.current = saved.examStartTime;
+          examDeadlineRef.current = authoritativeDeadline;
           setRemainingSeconds(rem);
 
           if (rem <= 0) {
@@ -382,15 +399,18 @@ export default function QuizInterface({
 
   // Option Selection: STARTS TIMER ON FIRST ANSWER IN EXAM MODE
   const handleSelectOption = (optionId) => {
-    let currentStartTime = examStartTime;
-    let currentDeadline = examDeadline;
+    let currentStartTime = examStartTimeRef.current || examStartTime;
+    let currentDeadline = examDeadlineRef.current || examDeadline;
 
     // Start timer immediately upon selecting the first answer in Exam Mode
+    // Synchronously set refs to ensure timer starts strictly once and cannot restart on rapid clicks or re-renders
     if (mode === 'exam' && !currentDeadline) {
       const now = Date.now();
       const deadline = now + totalExamDurationSeconds * 1000;
       currentStartTime = now;
       currentDeadline = deadline;
+      examStartTimeRef.current = now;
+      examDeadlineRef.current = deadline;
       setExamStartTime(now);
       setExamDeadline(deadline);
       setRemainingSeconds(totalExamDurationSeconds);
@@ -429,9 +449,11 @@ export default function QuizInterface({
   const handleModeChange = (newMode) => {
     setMode(newMode);
     // If switching to Exam Mode and answers already exist, start timer if not running
-    if (newMode === 'exam' && answeredCount > 0 && !examDeadline) {
+    if (newMode === 'exam' && answeredCount > 0 && !examDeadlineRef.current) {
       const now = Date.now();
       const deadline = now + totalExamDurationSeconds * 1000;
+      examStartTimeRef.current = now;
+      examDeadlineRef.current = deadline;
       setExamStartTime(now);
       setExamDeadline(deadline);
       setRemainingSeconds(totalExamDurationSeconds);
@@ -450,6 +472,8 @@ export default function QuizInterface({
     setCurrentIndex(0);
     setExamStartTime(null);
     setExamDeadline(null);
+    examStartTimeRef.current = null;
+    examDeadlineRef.current = null;
     setRemainingSeconds(totalExamDurationSeconds);
     setEvaluationResult(null);
     setShowReview(false);

@@ -22,6 +22,10 @@ const __dirname = path.dirname(__filename);
 
 const testFiles = [
   'test_quiz_engine.js',
+  'test_wildlife_week1_bank.js',
+  'test_wildlife_week2_bank.js',
+  'test_wildlife_weeks_3_to_6_banks.js',
+  'test_wildlife_weeks_7_to_12_banks.js',
   'test_routes_and_navigation.js',
   'test_exam_style_bottom_controls.js',
   'test_timer_and_exit_modal.js',
@@ -34,11 +38,13 @@ const testFiles = [
   'test_quiz_exit_scroll_restoration.js',
   'test_smooth_scroll_restoration.js',
   'test_final_question_and_wraparound.js',
-  'test_weekly_quiz_no_breadcrumbs.js'
+  'test_weekly_quiz_no_breadcrumbs.js',
+  'test_wildlife_hero_layout.js',
+  'test_combined_quiz_15min_timer.js'
 ];
 
 console.log('====================================================');
-console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (14 Suites)');
+console.log('  RUNNING COMPLETE MOOC PRACTICE TEST SUITE (20 Suites)');
 console.log('====================================================\n');
 
 let failedSuites = 0;

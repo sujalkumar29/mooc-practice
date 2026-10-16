@@ -51,107 +51,88 @@ export default function SubjectOverview() {
         { label: course.title }
       ]} />
 
-      {/* Course Hero Banner */}
-      <section style={{
-        padding: '2.5rem 0 3rem',
-        background: 'linear-gradient(180deg, rgba(5, 150, 105, 0.08) 0%, transparent 100%)',
-        borderBottom: '1px solid var(--color-border)'
-      }}>
-        <div className="container">
-          <Link
-            to="/subjects"
-            state={{ restoreScroll: true, isBackNav: true }}
-            className="btn btn-secondary btn-sm"
-            style={{ marginBottom: '1.5rem', display: 'inline-flex' }}
-          >
-            <ArrowLeft size={14} />
-            <span>Back to All Subjects</span>
-          </Link>
+      {/* Course Hero Banner with Blurred Background & Soft Light Overlay */}
+      <section className="subject-hero-section">
+        <div
+          className="subject-hero-bg"
+          style={{
+            backgroundImage: `url(${course.coverImage || '/images/wildlife_ecology.jpg'})`
+          }}
+          aria-hidden="true"
+        />
+        <div className="subject-hero-overlay" aria-hidden="true" />
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 340px',
-            gap: '2.5rem',
-            alignItems: 'center'
-          }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-                <span className="badge badge-primary">{course.category}</span>
-                <span className="badge badge-navy">{course.code || 'NPTEL Syllabus'}</span>
-                <span className="badge badge-warning">
-                  {stats.availableQuestions > 0 ? `${stats.availableQuestions}/${stats.totalPlannedQuestions} Loaded` : 'Questions Pending'}
-                </span>
-              </div>
+        <div className="container subject-hero-container">
+          <div className="subject-hero-nav">
+            <Link
+              to="/subjects"
+              state={{ restoreScroll: true, isBackNav: true }}
+              className="btn btn-secondary btn-sm"
+              style={{ display: 'inline-flex' }}
+            >
+              <ArrowLeft size={14} />
+              <span>Back to All Subjects</span>
+            </Link>
+          </div>
 
-              <h1 style={{ fontSize: 'clamp(2rem, 3.5vw, 2.8rem)', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
-                {course.title}
-              </h1>
-
-              {course.subtitle && (
-                <p style={{ fontSize: '1.15rem', color: 'var(--color-primary)', fontWeight: 600, marginBottom: '1rem' }}>
-                  {course.subtitle}
-                </p>
-              )}
-
-              <p style={{ color: 'var(--color-text-muted)', fontSize: '1rem', lineHeight: 1.6, maxWidth: '640px', marginBottom: '1.5rem' }}>
-                {course.description}
-              </p>
-
-              {/* Course Meta Stats */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '2rem',
-                paddingTop: '1.25rem',
-                borderTop: '1px solid var(--color-border)',
-                flexWrap: 'wrap'
-              }}>
-                <div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-                    {stats.totalWeeks} Weeks
-                  </div>
-                  <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
-                    Week 0 to Week 12
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--color-primary)' }}>
-                    {course.plannedQuestionsPerWeek || 10} MCQs
-                  </div>
-                  <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
-                    Per Weekly Quiz
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
-                    {stats.totalPlannedQuestions} MCQs
-                  </div>
-                  <div style={{ fontSize: '0.775rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
-                    Planned Question Bank
-                  </div>
-                </div>
-              </div>
+          <div className="subject-hero-content">
+            <div className="subject-hero-badges">
+              <span className="badge badge-primary">{course.category}</span>
+              <span className="badge badge-navy">{course.code || 'NPTEL Syllabus'}</span>
+              <span className="badge badge-warning">
+                {stats.availableQuestions > 0 ? `${stats.availableQuestions}/${stats.totalPlannedQuestions} Loaded` : 'Questions Pending'}
+              </span>
             </div>
 
-            {/* Course Imagery Visual */}
-            <div style={{
-              borderRadius: 'var(--radius-xl)',
-              overflow: 'hidden',
-              boxShadow: 'var(--shadow-lg)',
-              border: '1px solid var(--color-border)',
-              maxHeight: '230px'
-            }}>
-              <img
-                src={course.coverImage || '/images/wildlife_ecology.jpg'}
-                alt={course.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+            <h1 className="subject-hero-title">
+              {course.title}
+            </h1>
+
+            {course.subtitle && (
+              <p className="subject-hero-subtitle">
+                {course.subtitle}
+              </p>
+            )}
+
+            <p className="subject-hero-description">
+              {course.description}
+            </p>
+
+            <hr className="subject-hero-divider" />
+
+            {/* Course Meta Stats */}
+            <div className="subject-hero-stats">
+              <div className="subject-hero-stat-item">
+                <div className="subject-hero-stat-value">
+                  {stats.totalWeeks} Weeks
+                </div>
+                <div className="subject-hero-stat-label">
+                  Week 0 to Week 12
+                </div>
+              </div>
+
+              <div className="subject-hero-stat-item">
+                <div className="subject-hero-stat-value primary">
+                  {course.plannedQuestionsPerWeek || 10} MCQs
+                </div>
+                <div className="subject-hero-stat-label">
+                  Per Weekly Quiz
+                </div>
+              </div>
+
+              <div className="subject-hero-stat-item">
+                <div className="subject-hero-stat-value">
+                  {stats.totalPlannedQuestions} MCQs
+                </div>
+                <div className="subject-hero-stat-label">
+                  Planned Question Bank
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* Main Course Content */}
       <section style={{ padding: '3.5rem 0' }}>

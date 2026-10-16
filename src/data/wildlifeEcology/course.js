@@ -48,20 +48,20 @@ export const wildlifeEcologyCourse = {
     },
     {
       weekNumber: 4,
-      title: 'Week 4: Landscape Ecology & Habitat Fragmentation',
-      topics: ['Landscape mosaic', 'Corridors and stepping stones', 'Edge effects', 'Island biogeography theory'],
+      title: 'Week 4: Food Chains, Trophic Levels & Energy Flow',
+      topics: ['Food chains & webs', 'Ecological pyramids', 'Primary & secondary production', 'Trophic energy transfer'],
       plannedQuestions: 10
     },
     {
       weekNumber: 5,
-      title: 'Week 5: Behavioral Ecology & Foraging Strategies',
-      topics: ['Optimal foraging theory', 'Mating systems and sexual selection', 'Territoriality', 'Social behavior and communication'],
+      title: 'Week 5: Population Ecology & Sampling',
+      topics: ['Population parameters', 'Sampling methods', 'Capture-recapture techniques', 'Growth curves & fertility'],
       plannedQuestions: 10
     },
     {
       weekNumber: 6,
-      title: 'Week 6: Conservation Biology & Threat Assessment',
-      topics: ['IUCN Red List categories', 'Extinction vortices', 'Habitat destruction and invasive species', 'Overexploitation'],
+      title: 'Week 6: Community Structure, Succession & Biodiversity',
+      topics: ['Guilds & niches', 'Ecological succession', 'Community resilience & resistance', 'Species richness & abundance'],
       plannedQuestions: 10
     },
     {

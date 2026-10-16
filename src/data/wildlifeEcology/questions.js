@@ -613,7 +613,8 @@ export const wildlifeEcologyQuestions = {
       options: [
         'behaviourism',
         'ecology',
-        'ethology'
+        'ethology',
+        'prey-predator dynamics'
       ],
       correctAnswer: 'C',
       explanation: '',
@@ -621,7 +622,7 @@ export const wildlifeEcologyQuestions = {
     }
   ],
 
-  // Week 4: Landscape Ecology & Ecosystem Dynamics (10/10)
+  // Week 4: Food Chains, Trophic Levels & Energy Flow (10/10)
   4: [
     {
       id: 'wildlife-week4-q1',
@@ -765,7 +766,9 @@ export const wildlifeEcologyQuestions = {
       question: 'Which description best defines a heterotroph?',
       options: [
         'An organism that converts sunlight directly into inorganic nutrients',
-        'An organism that cannot produce its own food and depends on organic carbon from other sources'
+        'An organism that cannot produce its own food and depends on organic carbon from other sources',
+        'An organism that uses chemical reactions to manufacture minerals',
+        'An organism that occupies only the first trophic level'
       ],
       correctAnswer: 'B',
       explanation: '',
@@ -773,7 +776,7 @@ export const wildlifeEcologyQuestions = {
     }
   ],
 
-  // Week 5: Sampling Methods & Population Dynamics (10/10)
+  // Week 5: Population Ecology & Sampling (10/10)
   5: [
     {
       id: 'wildlife-week5-q1',
@@ -841,10 +844,12 @@ export const wildlifeEcologyQuestions = {
       week: 5,
       question: 'The minimum replacement level fertility for a population to grow should be greater than',
       options: [
-        'b.',
-        'd.'
+        '1',
+        '2',
+        '3',
+        '4'
       ],
-      correctAnswer: null,
+      correctAnswer: 'B',
       explanation: '',
       marks: 1
     },
@@ -897,7 +902,7 @@ export const wildlifeEcologyQuestions = {
       id: 'wildlife-week5-q9',
       subjectId: 'wildlife-ecology',
       week: 5,
-      question: 'employs a simple rule of selecting every kth unit starting with a number chosen at random from 1 to k as the random start.',
+      question: '______ employs a simple rule of selecting every kth unit starting with a number chosen at random from 1 to k as the random start.',
       options: [
         'Simple random sampling',
         'Systematic sampling',
@@ -925,7 +930,7 @@ export const wildlifeEcologyQuestions = {
     }
   ],
 
-  // Week 6: Community Ecology & Ecological Succession (10/10)
+  // Week 6: Community Structure, Succession & Biodiversity (10/10)
   6: [
     {
       id: 'wildlife-week6-q1',
@@ -1460,7 +1465,7 @@ export const wildlifeEcologyQuestions = {
         'Migration of birds',
         'Food chain length'
       ],
-      correctAnswer: 'C',
+      correctAnswer: 'A',
       explanation: '',
       marks: 1
     },
@@ -1475,7 +1480,7 @@ export const wildlifeEcologyQuestions = {
         'Terrace',
         'Column'
       ],
-      correctAnswer: 'A',
+      correctAnswer: 'D',
       explanation: '',
       marks: 1
     },
@@ -1490,7 +1495,7 @@ export const wildlifeEcologyQuestions = {
         'misery',
         'flood'
       ],
-      correctAnswer: 'D',
+      correctAnswer: 'A',
       explanation: '',
       marks: 1
     },
