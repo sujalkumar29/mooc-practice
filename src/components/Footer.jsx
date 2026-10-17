@@ -79,7 +79,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <p>© {new Date().getFullYear()} MOOC Practice Platform. All rights reserved.</p>
           <p style={{ color: '#64748b' }}>
-            Inspired by the practice workflows of NPTEL Companion & MyQuizPrep.
+            Inspired by the practice workflows of NPTEL Companion · Built by Sujal
           </p>
         </div>
       </div>
