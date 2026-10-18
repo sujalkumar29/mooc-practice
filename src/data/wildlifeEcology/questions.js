@@ -1465,7 +1465,7 @@ export const wildlifeEcologyQuestions = {
         'Migration of birds',
         'Food chain length'
       ],
-      correctAnswer: 'A',
+      correctAnswer: 'C',
       explanation: '',
       marks: 1
     },
@@ -1480,7 +1480,7 @@ export const wildlifeEcologyQuestions = {
         'Terrace',
         'Column'
       ],
-      correctAnswer: 'D',
+      correctAnswer: 'A',
       explanation: '',
       marks: 1
     },
@@ -1495,7 +1495,7 @@ export const wildlifeEcologyQuestions = {
         'misery',
         'flood'
       ],
-      correctAnswer: 'A',
+      correctAnswer: 'D',
       explanation: '',
       marks: 1
     },
